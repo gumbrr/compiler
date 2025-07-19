@@ -122,6 +122,7 @@ else if (current_state == State::identifier_state){
     return Token{Tokentype::identifier_token, lexeme, start_position};
 }
 
+//empty input or end of input
 return Token{Tokentype::eof_token, "", start_position};
 
 }
