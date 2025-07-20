@@ -3,12 +3,14 @@
 
 #include <vector>
 #include <iostream>
+#include <unordered_set>
 
 enum class Tokentype {
     number_token,
     operator_token,
     identifier_token,
     string_token,
+    keyword_token,
     left_paren_token,
     right_paren_token,
     eof_token,
@@ -43,6 +45,7 @@ private:
     std::string input;
     size_t input_position;
     Position token_position;
+    std::unordered_set<std::string> keywords = {"if", "else", "while", "for", "return", "break", "continue","true", "false", "null"};
 
     char lookahead();
     char consume();

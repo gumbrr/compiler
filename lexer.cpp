@@ -71,7 +71,8 @@ Token Lexer::match_token(){
                     || current_char == '=' 
                     || current_char == '<' 
                     || current_char == '>' 
-                    || current_char == '!'){ 
+                    || current_char == '!'
+                    || current_char == '&'){ 
                     current_state = State::operator_state;
                     lexeme += consume();
                 }
@@ -119,7 +120,11 @@ Token Lexer::match_token(){
                     lexeme += consume();
                 } 
                 else {
-                    return Token{Tokentype::identifier_token, lexeme, start_position};
+                    if (keywords.find(lexeme) != keywords.end()) {
+                        return Token{Tokentype::keyword_token, lexeme, start_position};
+                    } else {
+                        return Token{Tokentype::identifier_token, lexeme, start_position};
+                    }
                 }
                 break;
 
@@ -131,7 +136,8 @@ Token Lexer::match_token(){
                     (lexeme == "+" && current_char == '=') ||
                     (lexeme == "-" && current_char == '=') ||
                     (lexeme == "*" && current_char == '=') ||
-                    (lexeme == "/" && current_char == '=')
+                    (lexeme == "/" && current_char == '=') ||
+                    (lexeme == "&" && current_char == '=') 
                 ){
                     lexeme += consume();
                 }
@@ -148,7 +154,7 @@ if (current_state == State::number_state){
 else if (current_state == State::string_state){
     return Token{Tokentype::unknown_token, lexeme, start_position};
 }
-else if (current_state == State::identifier_state){
+else if (current_state == State::identifier_state ){//keyword will be seen as identifier
     return Token{Tokentype::identifier_token, lexeme, start_position};
 }
 else if (current_state == State::operator_state){

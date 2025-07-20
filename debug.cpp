@@ -10,6 +10,7 @@ std::string Debug::token_type_to_string(Tokentype type) {
         case Tokentype::unknown_token: return "unknown";
         case Tokentype::left_paren_token: return "left_paren";
         case Tokentype::right_paren_token: return "right_paren";
+        case Tokentype::keyword_token: return "keyword";
         default: return "invalid";
     }
 }
