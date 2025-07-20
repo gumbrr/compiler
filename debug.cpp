@@ -8,6 +8,8 @@ std::string Debug::token_type_to_string(Tokentype type) {
         case Tokentype::string_token: return "string";
         case Tokentype::eof_token: return "eof";
         case Tokentype::unknown_token: return "unknown";
+        case Tokentype::left_paren_token: return "left_paren";
+        case Tokentype::right_paren_token: return "right_paren";
         default: return "invalid";
     }
 }

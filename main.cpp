@@ -1,11 +1,6 @@
 #include "debug.h"
 
 int main() {
-    Debug::print_tokens("");
-    Debug::print_tokens("@");     
-    Debug::print_tokens("12345");
-    Debug::print_tokens("var_name");
-    Debug::print_tokens("+ - * / =");
-    Debug::print_tokens("\"Hello, World!\"");    
+    Debug::print_tokens("x = 42 + 8 >= 5 != (foo_123) \"hello\" # \"unterminated");
     return 0;
 }

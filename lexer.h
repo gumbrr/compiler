@@ -9,6 +9,8 @@ enum class Tokentype {
     operator_token,
     identifier_token,
     string_token,
+    left_paren_token,
+    right_paren_token,
     eof_token,
     unknown_token
 };
@@ -19,7 +21,6 @@ enum class State {
     identifier_state,
     string_state,
     operator_state
-    //accept_state
 };
 
 struct Position {

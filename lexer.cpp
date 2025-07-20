@@ -49,6 +49,8 @@ Token Lexer::match_token(){
 
                 if (isspace(current_char)){
                     ignore_whitespace();
+                    start_position = token_position;
+                    continue;
                 }
                 else if (isdigit(current_char)){
                     current_state = State::number_state;
@@ -62,13 +64,27 @@ Token Lexer::match_token(){
                     current_state = State::string_state;
                     consume();
                 }
-                else if(current_char == '+' ||current_char == '-' ||current_char == '/' ||current_char == '*' ||current_char == '=') {
-                    //current_state = State::operator_state;
+                else if(current_char == '+' 
+                    || current_char == '-' 
+                    || current_char == '/' 
+                    || current_char == '*' 
+                    || current_char == '=' 
+                    || current_char == '<' 
+                    || current_char == '>' 
+                    || current_char == '!'){ 
+                    current_state = State::operator_state;
                     lexeme += consume();
-                    return Token{Tokentype::operator_token, lexeme, start_position};//needs to be expanded
+                }
+                else if (current_char == '('){
+                    lexeme += consume();
+                    return Token{Tokentype::left_paren_token, lexeme, start_position};
+                }
+                else if (current_char == ')'){
+                    lexeme += consume();
+                    return Token{Tokentype::right_paren_token, lexeme, start_position};
                 }
                 else {
-                    lexeme += consume(); //still consume unkown char
+                    lexeme += consume(); //still consume unknown char
                     return Token{Tokentype::unknown_token, lexeme, start_position}; //return unknown token
                 }
                 break;
@@ -85,11 +101,11 @@ Token Lexer::match_token(){
 
             case State::string_state:
 
-                if (current_char == '"') {
+                if (current_char == '"'){
                     consume();
                     return Token{Tokentype::string_token, lexeme, start_position};
                 } 
-                else if (current_char == '\n' || is_finished()) {
+                else if (current_char == '\n' || is_finished()){
                     return Token{Tokentype::unknown_token, lexeme, start_position};
                 } 
                 else {
@@ -99,7 +115,7 @@ Token Lexer::match_token(){
 
             case State::identifier_state:
 
-                if (isalnum(current_char) || current_char == '_') {
+                if (isalnum(current_char) || current_char == '_'){
                     lexeme += consume();
                 } 
                 else {
@@ -107,7 +123,21 @@ Token Lexer::match_token(){
                 }
                 break;
 
-            //case State::operator_state:
+            case State::operator_state:
+                if ((lexeme == "=" && current_char == '=') ||
+                    (lexeme == "!" && current_char == '=') ||
+                    (lexeme == "<" && current_char == '=') ||
+                    (lexeme == ">" && current_char == '=') ||
+                    (lexeme == "+" && current_char == '=') ||
+                    (lexeme == "-" && current_char == '=') ||
+                    (lexeme == "*" && current_char == '=') ||
+                    (lexeme == "/" && current_char == '=')
+                ){
+                    lexeme += consume();
+                }
+                return Token{Tokentype::operator_token, lexeme, start_position};
+                
+                break;
         }
     }
 
@@ -121,7 +151,9 @@ else if (current_state == State::string_state){
 else if (current_state == State::identifier_state){
     return Token{Tokentype::identifier_token, lexeme, start_position};
 }
-
+else if (current_state == State::operator_state){
+    return Token{Tokentype::operator_token, lexeme, start_position};
+}
 //empty input or end of input
 return Token{Tokentype::eof_token, "", start_position};
 
